@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Weather Info App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 58, 137, 183)),
         useMaterial3: true,
       ),
       home: const MyHomePage(),
@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _fetchWeather() {
     setState(() {
       _cityName = _cityController.text;
-      _temperature = '${Random()}°C';
+      _temperature = '${Random().nextInt(16) + 15}°C';
       _weatherCondition = ['Sunny', 'Cloudy', 'Rainy'][Random().nextInt(3)];
     });
   }
