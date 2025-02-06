@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -28,16 +29,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final TextEditingController _cityController = TextEditingController();
   String _cityName = '';
-  String _temperature = '';
-  String _weatherCondition = '';
+  String _temperature = '--';
+  String _weatherCondition = '--';
 
   void _fetchWeather() {
     setState(() {
-      _cityName = _cityController.text;
-      _temperature = '';
-      _weatherCondition = '';
+      _cityName = '';
+      _temperature = '${Random().nextInt(16) + 15}°C';
+      _weatherCondition = ['Sunny', 'Cloudy', 'Rainy'][Random().nextInt(3)];
     });
   }
 
@@ -52,9 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: _cityController,
-              decoration: const InputDecoration(
+            const TextField(
+              decoration: InputDecoration(
                 labelText: 'Enter City Name',
                 border: OutlineInputBorder(),
               ),
@@ -63,9 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: _fetchWeather,
               child: const Text('Fetch Weather'),
             ),
-            Text('City: '),
-            Text('Temperature: '),
-            Text('Condition: '),
+            Text('City: $_cityName', style: Theme.of(context).textTheme.headlineSmall),
+            Text('Temperature: $_temperature', style: Theme.of(context).textTheme.headlineSmall),
+            Text('Condition: $_weatherCondition', style: Theme.of(context).textTheme.headlineSmall),
           ],
         ),
       ),
