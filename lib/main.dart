@@ -20,8 +20,26 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final TextEditingController _cityController = TextEditingController();
+  String _cityName = '';
+  String _temperature = '';
+  String _weatherCondition = '';
+
+  void _fetchWeather() {
+    setState(() {
+      _cityName = _cityController.text;
+      _temperature = '';
+      _weatherCondition = '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +48,26 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Weather Info'),
       ),
-      body: const Center(
-        child: Text('Weather data will be displayed here.'),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _cityController,
+              decoration: const InputDecoration(
+                labelText: 'Enter City Name',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: _fetchWeather,
+              child: const Text('Fetch Weather'),
+            ),
+            Text('City: '),
+            Text('Temperature: '),
+            Text('Condition: '),
+          ],
+        ),
       ),
     );
   }
