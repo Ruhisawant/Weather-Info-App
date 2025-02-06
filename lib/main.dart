@@ -29,14 +29,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final TextEditingController _cityController = TextEditingController();
   String _cityName = '';
-  String _temperature = '--';
-  String _weatherCondition = '--';
+  String _temperature = '';
+  String _weatherCondition = '';
 
   void _fetchWeather() {
     setState(() {
-      _cityName = '';
-      _temperature = '${Random().nextInt(16) + 15}°C';
+      _cityName = _cityController.text;
+      _temperature = '${Random()}°C';
       _weatherCondition = ['Sunny', 'Cloudy', 'Rainy'][Random().nextInt(3)];
     });
   }
@@ -51,17 +52,21 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: _cityController,
+              decoration: const InputDecoration(
                 labelText: 'Enter City Name',
                 border: OutlineInputBorder(),
               ),
             ),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _fetchWeather,
               child: const Text('Fetch Weather'),
             ),
+            const SizedBox(height: 20),
             Text('City: $_cityName', style: Theme.of(context).textTheme.headlineSmall),
             Text('Temperature: $_temperature', style: Theme.of(context).textTheme.headlineSmall),
             Text('Condition: $_weatherCondition', style: Theme.of(context).textTheme.headlineSmall),
