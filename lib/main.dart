@@ -11,31 +11,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
-        child: _TabsNonScrollableDemo(),
+        child: WeatherTabs(),
       ),
     );
   }
 }
 
-class _TabsNonScrollableDemo extends StatefulWidget {
+class WeatherTabs extends StatefulWidget {
   @override
-  __TabsNonScrollableDemoState createState() => __TabsNonScrollableDemoState();
+  _WeatherTabsState createState() => _WeatherTabsState();
 }
 
-class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
-    with SingleTickerProviderStateMixin, RestorationMixin {
+class _WeatherTabsState extends State<WeatherTabs> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
-  final RestorableInt tabIndex = RestorableInt(0);
-
-  @override
-  String get restorationId => 'tab_non_scrollable_demo';
-
-  @override
-  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
-    registerForRestoration(tabIndex, 'tab_index');
-    _tabController.index = tabIndex.value;
-  }
 
   @override
   void initState() {
@@ -49,38 +37,38 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
 
   @override
   Widget build(BuildContext context) {
-    final tabs = ['Weather', '7-Day Weather'];
+    final tabs = ['Search City', '7-Day Forecast'];
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tabs Demo'),
+        title: const Text('Weather Info App'),
         bottom: TabBar(
           controller: _tabController,
+          isScrollable: false,
           tabs: [for (final tab in tabs) Tab(text: tab)],
         ),
       ),
-      
       body: TabBarView(
         controller: _tabController,
         children: [
-          // tab 1: Weather App
-          _WeatherApp(),
+          // tab 1: City Weather
+          CityWeather(),
 
           // tab 2: 7-Day Weather Forecast
-          _SevenDayWeather(),
+          WeatherForecast(),
         ],
       ),
     );
   }
 }
 
-// Weather App Widget (Tab 1)
-class _WeatherApp extends StatefulWidget {
+// City Weather Widget
+class CityWeather extends StatefulWidget {
   @override
-  __WeatherAppState createState() => __WeatherAppState();
+  _CityWeatherState createState() => _CityWeatherState();
 }
 
-class __WeatherAppState extends State<_WeatherApp> {
+class _CityWeatherState extends State<CityWeather> {
   final TextEditingController _cityController = TextEditingController();
   String _cityName = '';
   String _temperature = '';
@@ -97,34 +85,51 @@ class __WeatherAppState extends State<_WeatherApp> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blue,
+      color: Colors.lightBlueAccent,
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _cityController,
-              decoration: const InputDecoration(
-                labelText: 'Enter City Name',
-                border: OutlineInputBorder(),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: _cityController,
+                decoration: const InputDecoration(
+                  labelText: 'Enter City Name',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: _fetchWeather,
-              child: const Text('Fetch Weather'),
-            ),
-            Text('City: $_cityName', style: Theme.of(context).textTheme.headlineSmall),
-            Text('Temperature: $_temperature', style: Theme.of(context).textTheme.headlineSmall),
-            Text('Condition: $_weatherCondition', style: Theme.of(context).textTheme.headlineSmall),
-          ],
+              const SizedBox(height: 30),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _fetchWeather,
+                  child: const Text('Fetch Weather'),
+                ),
+              ),
+              const SizedBox(height: 30),
+              Text(
+                'City: $_cityName',
+                style: const TextStyle(fontSize: 20),
+              ),
+              Text(
+                'Temperature: $_temperature',
+                style: const TextStyle(fontSize: 20),
+              ),
+              Text(
+                'Condition: $_weatherCondition',
+                style: const TextStyle(fontSize: 20),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-// 7-Day Weather Forecast Widget (Tab 2)
-class _SevenDayWeather extends StatelessWidget {
+// 7-Day Weather Forecast Widget
+class WeatherForecast extends StatelessWidget {
   final List<Map<String, String>> _forecastData = List.generate(
     7,
     (index) => {
@@ -137,7 +142,7 @@ class _SevenDayWeather extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.green,
+      color: Colors.lightBlueAccent,
       child: ListView.builder(
         itemCount: _forecastData.length,
         itemBuilder: (context, index) {
